@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
 
 const Register = () => {
-    const { createUser, profileUpdate } = useContext(AuthContext);
+    const { createUser, profileUpdate, verifyEmail } = useContext(AuthContext);
     const [error, setError] = useState('');
     const [accepted, setAccepted] = useState()
 
@@ -24,12 +25,19 @@ const Register = () => {
                 profileUpdate(name, photoURL);
                 setError('');
                 console.log(user);
+                handleEmailVerification();
                 form.reset();
             })
             .catch(error => {
                 console.error(error);
                 setError(error.message);
             })
+    }
+    const handleEmailVerification = () => {
+        verifyEmail()
+            .then(() => {
+                toast.success('Email verification link is sent to your email address.')
+             })
     }
     const handleCheck = (event) => {
         setAccepted(event.target.checked);
